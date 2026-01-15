@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="btn_main_radius">16dp</dimen>
+    <dimen name="ts_main">22sp</dimen>
+    <dimen name="ts_regular">16sp</dimen>
+</resources>
