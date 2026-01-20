@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
+            android:id="@+id/btn_settings_back"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:backgroundTint="@color/white"
