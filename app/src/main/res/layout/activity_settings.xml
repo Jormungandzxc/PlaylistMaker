@@ -19,8 +19,9 @@
             android:id="@+id/btn_settings_back"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:padding="12dp"
             android:backgroundTint="@color/white"
-            android:src="@drawable/ic_back" />
+            android:src="@drawable/ic_back_arrow_24" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,7 +42,8 @@
         android:layout_marginTop="28dp"
         android:backgroundTint="@color/white"
         android:fontFamily="@font/yandex_text"
-        android:paddingHorizontal="16dp"
+        android:paddingStart="@dimen/settings_btn_padStart"
+        android:paddingEnd="@dimen/settings_btn_padEnd"
         android:text="@string/btn_dark_theme"
         android:textColor="@color/text_color"
         android:textSize="@dimen/ts_regular"
@@ -58,7 +60,8 @@
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
+        android:paddingStart="@dimen/settings_btn_padStart"
+        android:paddingEnd="@dimen/settings_btn_padEnd"
         app:layout_constraintTop_toBottomOf="@+id/switchMaterial">
 
         <TextView
@@ -73,7 +76,9 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_share" />
+            android:paddingVertical="3dp"
+            android:paddingHorizontal="4dp"
+            android:src="@drawable/ic_share_24" />
 
     </LinearLayout>
 
@@ -86,7 +91,8 @@
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
+        android:paddingStart="@dimen/settings_btn_padStart"
+        android:paddingEnd="@dimen/settings_btn_padEnd"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
         <TextView
@@ -101,7 +107,9 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_support" />
+            android:paddingVertical="3dp"
+            android:paddingHorizontal="2dp"
+            android:src="@drawable/ic_support_24" />
 
     </LinearLayout>
 
@@ -113,7 +121,8 @@
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
+        android:paddingStart="@dimen/settings_btn_padStart"
+        android:paddingEnd="@dimen/settings_btn_padEnd"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
         <TextView
@@ -128,7 +137,9 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_next" />
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="8dp"
+            android:src="@drawable/ic_next_arrow_24" />
 
     </LinearLayout>
 

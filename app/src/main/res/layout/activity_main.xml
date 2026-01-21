@@ -52,7 +52,7 @@
                 android:textSize="@dimen/ts_main"
                 app:cornerRadius="@dimen/btn_main_radius"
                 app:fontFamily="@font/yandex_medium"
-                app:icon="@drawable/ic_search"
+                app:icon="@drawable/ic_search_24"
                 app:iconGravity="textStart"
                 app:iconPadding="8dp"
                 app:iconTint="@color/text_color" />
@@ -72,7 +72,7 @@
                 android:textSize="@dimen/ts_main"
                 app:cornerRadius="@dimen/btn_main_radius"
                 app:fontFamily="@font/yandex_medium"
-                app:icon="@drawable/ic_library"
+                app:icon="@drawable/ic_library_24"
                 app:iconGravity="textStart"
                 app:iconPadding="8dp"
                 app:iconTint="@color/text_color" />
@@ -93,7 +93,7 @@
                 android:textSize="@dimen/ts_main"
                 app:cornerRadius="@dimen/btn_main_radius"
                 app:fontFamily="@font/yandex_medium"
-                app:icon="@drawable/ic_settings"
+                app:icon="@drawable/ic_settings_24"
                 app:iconGravity="textStart"
                 app:iconPadding="8dp"
                 app:iconTint="@color/text_color" />
