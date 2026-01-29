@@ -40,63 +40,24 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_search"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/white"
-                android:foreground="?attr/selectableItemBackground"
                 android:text="@string/btn_search"
-                android:letterSpacing="0"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/ts_main"
-                app:cornerRadius="@dimen/btn_main_radius"
-                app:fontFamily="@font/ys_display_regular"
-                app:icon="@drawable/ic_search_24"
-                app:iconGravity="textStart"
-                app:iconPadding="8dp"
-                app:iconTint="@color/text_color" />
+                style="@style/MainButtonWithIconStyle"
+                app:icon="@drawable/ic_search_24"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_library"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="@color/white"
-                android:foreground="?attr/selectableItemBackground"
                 android:text="@string/btn_library"
-                android:letterSpacing="0"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/ts_main"
-                app:cornerRadius="@dimen/btn_main_radius"
-                app:fontFamily="@font/ys_display_regular"
-                app:icon="@drawable/ic_library_24"
-                app:iconGravity="textStart"
-                app:iconPadding="8dp"
-                app:iconTint="@color/text_color" />
+                style="@style/MainButtonWithIconStyle"
+                app:icon="@drawable/ic_library_24"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_settings"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="28dp"
-                android:backgroundTint="@color/white"
-                android:foreground="?attr/selectableItemBackground"
                 android:text="@string/btn_settings"
-                android:letterSpacing="0"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/ts_main"
-                app:cornerRadius="@dimen/btn_main_radius"
-                app:fontFamily="@font/ys_display_regular"
-                app:icon="@drawable/ic_settings_24"
-                app:iconGravity="textStart"
-                app:iconPadding="8dp"
-                app:iconTint="@color/text_color" />
+                style="@style/MainButtonWithIconStyle"
+                app:icon="@drawable/ic_settings_24"/>
 
         </LinearLayout>
 
