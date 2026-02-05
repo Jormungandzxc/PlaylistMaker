@@ -28,7 +28,7 @@
 
     <!--    Settings activity-->
 
-    <style name="SettingsButtonStyle" parent="SettingsButtonTextStyle">
+    <style name="btn_user_agreement" parent="SettingsButtonTextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">61dp</item>
         <item name="android:clickable">true</item>
@@ -39,7 +39,7 @@
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="SettingsSwitchButtonStyle" parent="SettingsButtonStyle">
+    <style name="SettingsSwitchButtonStyle" parent="btn_user_agreement">
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">@color/text_color</item>
         <item name="android:textSize">@dimen/ts_regular</item>
