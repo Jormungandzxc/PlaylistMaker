@@ -27,9 +27,9 @@ class SettingsActivity : AppCompatActivity() {
         shareButton.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
-            val shareText = "https://practicum.yandex.com/profile/android-developer-plus/"
+            val shareText = getString(R.string.share_app_text)
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
-            startActivity(Intent.createChooser(shareIntent, "Поделиться через"))
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_chooser_title)))
         }
 
         val supportButton = findViewById<LinearLayout>(R.id.btn_support)
@@ -37,10 +37,10 @@ class SettingsActivity : AppCompatActivity() {
         supportButton.setOnClickListener {
             val supportIntent = Intent(Intent.ACTION_SENDTO)
             supportIntent.data = Uri.parse("mailto:")
-            supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("diborempty@gmail.com"))
-            val subject = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
+            supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email_address)))
+            val subject = getString(R.string.support_subject)
             supportIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-            val message = "«Спасибо разработчикам и разработчицам за крутое приложение!"
+            val message = getString(R.string.support_message)
             supportIntent.putExtra(Intent.EXTRA_TEXT, message)
             startActivity(supportIntent)
         }
@@ -48,7 +48,7 @@ class SettingsActivity : AppCompatActivity() {
         val userAgreementButton = findViewById<LinearLayout>(R.id.btn_user_agreement)
 
         userAgreementButton.setOnClickListener {
-            val url = "https://yandex.ru/legal/practicum_offer/ru/"
+            val url = getString(R.string.agreement_link)
             val agreementIntent = Intent(Intent.ACTION_VIEW)
             agreementIntent.data = Uri.parse(url)
             startActivity(agreementIntent)
