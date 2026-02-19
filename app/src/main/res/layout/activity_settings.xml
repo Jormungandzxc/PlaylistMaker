@@ -6,98 +6,69 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/titleLayout"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/settingsToolbar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
+        android:layout_height="?actionBarSize"
+        app:title="@string/title_settings"
+        app:titleTextAppearance="@style/ToolbarTitleTextStyle"
+        app:titleMarginStart="12dp"
+        app:navigationIcon="@drawable/ic_back_arrow_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:id="@+id/btn_settings_back"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:backgroundTint="@null"
-            android:background="@null"
-            android:padding="12dp"
-            android:src="@drawable/ic_back_arrow_24" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/ys_display_medium"
-            android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:text="@string/title_settings"
-            android:textSize="@dimen/ts_main" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_btn_dark_mode"
         style="@style/SettingsSwitchButtonStyle"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:backgroundTint="@color/white"
         android:text="@string/btn_dark_theme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/settingsToolbar" />
 
-    <LinearLayout
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/btn_share"
-        style="@style/btn_user_agreement"
+        style="@style/SettingsButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_share_24"
+        android:paddingVertical="21dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="12dp"
+        android:text="@string/btn_share_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch_btn_dark_mode">
+        app:layout_constraintTop_toBottomOf="@+id/switch_btn_dark_mode" />
 
-        <TextView
-            android:text="@string/btn_share_app"
-            style="@style/SettingsButtonTextStyle" />
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_share_24" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/btn_support"
-        style="@style/btn_user_agreement"
+        style="@style/SettingsButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_support_24"
+        android:paddingVertical="21dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="12dp"
+        android:text="@string/btn_support"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_share">
+        app:layout_constraintTop_toBottomOf="@+id/btn_share" />
 
-        <TextView
-            style="@style/SettingsButtonTextStyle"
-            android:text="@string/btn_support" />
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_support_24" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/btn_user_agreement"
-        style="@style/btn_user_agreement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="21dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="12dp"
+        style="@style/SettingsButtonStyle"
+        android:drawableEnd="@drawable/ic_next_arrow_24"
+        android:text="@string/btn_user_agreement"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_support">
-
-        <TextView
-            style="@style/SettingsButtonTextStyle"
-            android:text="@string/btn_user_agreement" />
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_next_arrow_24" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/btn_support" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

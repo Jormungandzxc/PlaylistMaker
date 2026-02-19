@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/bg_color"
+    android:orientation="vertical"
     android:paddingHorizontal="16dp">
 
     <TextView
@@ -20,47 +20,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_search"
+        style="@style/MainButtonWithIconStyle"
         android:layout_height="0dp"
         android:layout_marginTop="40dp"
+        android:text="@string/btn_search"
+        app:icon="@drawable/ic_search_24"
+        app:layout_constraintBottom_toTopOf="@id/btn_library"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_library"
+        style="@style/MainButtonWithIconStyle"
+        android:layout_marginTop="16dp"
+        android:text="@string/btn_library"
+        app:icon="@drawable/ic_library_24"
+        app:layout_constraintBottom_toTopOf="@id/btn_settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_search" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_settings"
+        style="@style/MainButtonWithIconStyle"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="28dp"
+        android:text="@string/btn_settings"
+        app:icon="@drawable/ic_settings_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_search"
-                android:text="@string/btn_search"
-                style="@style/MainButtonWithIconStyle"
-                app:icon="@drawable/ic_search_24"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_library"
-                android:layout_marginTop="16dp"
-                android:text="@string/btn_library"
-                style="@style/MainButtonWithIconStyle"
-                app:icon="@drawable/ic_library_24"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_settings"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="28dp"
-                android:text="@string/btn_settings"
-                style="@style/MainButtonWithIconStyle"
-                app:icon="@drawable/ic_settings_24"/>
-
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/btn_library" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

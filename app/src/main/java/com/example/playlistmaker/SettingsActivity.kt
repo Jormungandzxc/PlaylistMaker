@@ -9,20 +9,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val buttonBack = findViewById<ImageButton>(R.id.btn_settings_back)
+        val toolbar = findViewById<MaterialToolbar>(R.id.settingsToolbar)
 
-        buttonBack.setOnClickListener{
+        toolbar.setNavigationOnClickListener{
             finish()
         }
 
-        val shareButton = findViewById<LinearLayout>(R.id.btn_share)
+        val shareButton = findViewById<MaterialTextView>(R.id.btn_share)
 
         shareButton.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
@@ -32,7 +34,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_chooser_title)))
         }
 
-        val supportButton = findViewById<LinearLayout>(R.id.btn_support)
+        val supportButton = findViewById<MaterialTextView>(R.id.btn_support)
 
         supportButton.setOnClickListener {
             val supportIntent = Intent(Intent.ACTION_SENDTO)
@@ -45,7 +47,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(supportIntent)
         }
 
-        val userAgreementButton = findViewById<LinearLayout>(R.id.btn_user_agreement)
+        val userAgreementButton = findViewById<MaterialTextView>(R.id.btn_user_agreement)
 
         userAgreementButton.setOnClickListener {
             val url = getString(R.string.agreement_link)

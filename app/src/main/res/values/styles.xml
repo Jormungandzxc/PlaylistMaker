@@ -2,13 +2,9 @@
 <resources>
 <!--    General-->
 
-    <style name="TitleTextStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:textColor">@color/text_color</item>
+    <style name="ToolbarTitleTextStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/title_text_color</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingHorizontal">16dp</item>
         <item name="android:textSize">@dimen/ts_main</item>
     </style>
 
@@ -23,12 +19,11 @@
 
 <!--    Main activity-->
 
-    <style name="MainButtonStyle">
+    <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:backgroundTint">@color/white</item>
-        <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="cornerRadius">@dimen/btn_main_radius</item>
     </style>
     
@@ -49,7 +44,7 @@
 
     <!--    Settings activity-->
 
-    <style name="btn_user_agreement" parent="SettingsButtonTextStyle">
+    <style name="btn_user_agreement" parent="SettingsButtonStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">61dp</item>
         <item name="android:clickable">true</item>
@@ -67,7 +62,7 @@
     </style>
 
 
-    <style name="SettingsButtonTextStyle">
+    <style name="SettingsButtonStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
@@ -90,6 +85,5 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/text_color</item>
     </style>
-
 
 </resources>

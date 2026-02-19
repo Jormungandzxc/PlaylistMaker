@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.appbar.MaterialToolbar
 
 class SearchActivity : AppCompatActivity() {
     //Переменная для хранения текста
@@ -31,9 +32,12 @@ class SearchActivity : AppCompatActivity() {
 
         val searchEditText = findViewById<EditText>(R.id.editText)
         val clearButton = findViewById<ImageView>(R.id.clearButton)
+        val toolbar = findViewById<MaterialToolbar>(R.id.searchToolbar)
 
-        val navLibraryButton = findViewById<LinearLayout>(R.id.navLibraryButton)
-        val navSettingButton = findViewById<LinearLayout>(R.id.navSettingsButton)
+
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
 
         //Восстановление текста в EditText.
         searchEditText.setText((searchText))
@@ -61,16 +65,6 @@ class SearchActivity : AppCompatActivity() {
 
         searchEditText.addTextChangedListener(textWatcher)
 
-        //Функционал навигационного меню
-        navLibraryButton.setOnClickListener{
-            val libraryIntent = Intent(this, LibraryActivity::class.java)
-            startActivity(libraryIntent)
-        }
-
-        navSettingButton.setOnClickListener {
-            val settingsIntent = Intent(this, SettingsActivity::class.java)
-            startActivity(settingsIntent)
-        }
 
     }
 
