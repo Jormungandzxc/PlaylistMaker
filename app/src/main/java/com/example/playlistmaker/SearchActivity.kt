@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 
 class SearchActivity : AppCompatActivity() {
     //Переменная для хранения текста
@@ -45,6 +47,10 @@ class SearchActivity : AppCompatActivity() {
 //        Очистка текстового поля
         clearButton.setOnClickListener{
             searchEditText.setText("")
+
+            //Скрытие клавиатуры
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         }
 
         val textWatcher = object : TextWatcher{
