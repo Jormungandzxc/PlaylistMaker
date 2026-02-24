@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+
+    <style name="ToolbarTitleTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:textSize">@dimen/ts_main</item>
+    </style>
+
+    <style name="Small_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+
+
+<!--    Main activity-->
+
+    <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="cornerRadius">@dimen/btn_main_radius</item>
+    </style>
+    
+    <style name="MainButtonTextStyle" parent="MainButtonStyle">
+        <item name="android:letterSpacing">0</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textSize">@dimen/ts_main</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+    </style>
+    
+    <style name="MainButtonWithIconStyle" parent="MainButtonTextStyle">
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">8dp</item>
+        <item name="iconTint">@color/text_color</item>
+    </style>
+
+
+    <!--    Settings activity-->
+
+    <style name="btn_user_agreement" parent="SettingsButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">61dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/settings_btn_padStart</item>
+        <item name="android:paddingEnd">@dimen/settings_btn_padEnd</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="SettingsSwitchButtonStyle" parent="btn_user_agreement">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+
+        <item name="android:textSize">@dimen/ts_regular</item>
+    </style>
+
+
+    <style name="SettingsButtonStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+
+        <item name="android:textSize">@dimen/ts_regular</item>
+    </style>
+
+
+    <!--    Search activity-->
+
+    <style name="edittext_search_bg_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:layout_marginVertical">8dp</item>
+        <item name="android:background">@drawable/edittext_search_round_bg_shape</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">40dp</item>
+        <item name="android:textColorHint">@color/text_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
+</resources>

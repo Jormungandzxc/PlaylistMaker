@@ -1,0 +1,4 @@
+<!-- res/layout/activity_main.xml -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/main_container"  <!-- <<-- ДОБАВЬТЕ ЭТОТ ID -->
+    ... >...</androidx.constraintlayout.widget.ConstraintLayout>
