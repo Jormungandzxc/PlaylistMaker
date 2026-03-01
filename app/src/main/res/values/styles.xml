@@ -16,6 +16,22 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
+    <style name="TrackNameTextStyle">
+        <item name="android:textColor">@color/track_name_color</item>
+        <item name="android:textSize">@dimen/ts_regular</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ArtistNameTextStyle">
+        <item name="android:textColor">@color/track_artist_name_color</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
 
 <!--    Main activity-->
 
@@ -73,7 +89,7 @@
 
 <!--    Search activity-->
 
-    <style name="edittext_search_bg_style">
+    <style name="Edittext_search_bg_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">36dp</item>
         <item name="android:layout_marginHorizontal">16dp</item>
@@ -85,5 +101,8 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/text_color</item>
     </style>
+
+
+
 
 </resources>

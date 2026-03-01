@@ -21,7 +21,7 @@
 
     <EditText
         android:id="@+id/editText"
-        style="@style/edittext_search_bg_style"
+        style="@style/Edittext_search_bg_style"
         android:drawableStart="@drawable/ic_search_16"
         android:drawablePadding="8dp"
         android:drawableTint="@color/hint_color"
@@ -42,5 +42,21 @@
         app:layout_constraintBottom_toBottomOf="@+id/editText"
         app:layout_constraintEnd_toEndOf="@+id/editText"
         app:layout_constraintTop_toTopOf="@+id/editText" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trackRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/track_view" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
