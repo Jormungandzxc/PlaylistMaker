@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="btn_main_radius">16dp</dimen>
-    <dimen name="ts_main">22sp</dimen>
+    <dimen name="ts_main_22">22sp</dimen>
     <dimen name="ts_regular">16sp</dimen>
     <dimen name="settings_btn_padStart">16dp</dimen>
     <dimen name="settings_btn_padEnd">12dp</dimen>
     <dimen name="artwork_corner_radius">2dp</dimen>
+    <dimen name="ts_main_14">14sp</dimen>
 
 </resources>
