@@ -59,9 +59,8 @@ class SettingsActivity : AppCompatActivity() {
 
             //Свич темы
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch_btn_dark_mode)
-
-        val isDarkTheme = (applicationContext as App).darkTheme
-        themeSwitcher.isChecked = isDarkTheme
+        val sharedPrefs = getSharedPreferences(App.PLAYLIST_MAKER_PREFS, MODE_PRIVATE)
+        themeSwitcher.isChecked = sharedPrefs.getBoolean(App.DARK_THEME_KEY, false)
         themeSwitcher.setOnCheckedChangeListener{switcher, checked ->
             (applicationContext as App).switchTheme(checked)
         }
