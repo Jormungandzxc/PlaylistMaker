@@ -17,6 +17,9 @@ import android.content.Context
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import retrofit2.Retrofit
@@ -38,12 +41,19 @@ class SearchActivity : AppCompatActivity() {
 
     private val iTunesService = retrofit.create(ITunesApi::class.java)
     private val tracks = ArrayList<Track>()
-    private val adapter = TrackAdapter(tracks)
+    private lateinit var adapter: TrackAdapter
 
     private lateinit var placeholderMessage: LinearLayout
     private lateinit var placeholderImage: ImageView
     private lateinit var placeholderText: TextView
     private lateinit var refreshButton: MaterialButton
+    private lateinit var trackRecyclerView: RecyclerView
+    private lateinit var historyLayout: ConstraintLayout
+
+    private lateinit var searchHistory: SearchHistory
+    private lateinit var historyRecyclerView: RecyclerView
+    private lateinit var clearHistoryButton: MaterialButton
+    private lateinit var historyAdapter: TrackAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +75,29 @@ class SearchActivity : AppCompatActivity() {
         placeholderImage = findViewById<ImageView>(R.id.placeholderImage)
         placeholderText = findViewById<TextView>(R.id.placeholderText)
         refreshButton = findViewById<MaterialButton>(R.id.refreshButton)
+        trackRecyclerView = findViewById<RecyclerView>(R.id.trackRecyclerView)
+
+
+        //История поиска
+        val sharedPrefs = getSharedPreferences("playlist_maker_prefs", MODE_PRIVATE)
+        searchHistory = SearchHistory(sharedPrefs)
+
+        historyLayout = findViewById(R.id.historyLayout)
+        historyRecyclerView = findViewById(R.id.historyRecyclerView)
+        clearHistoryButton = findViewById(R.id.clearHistoryButton)
+
+        historyAdapter = TrackAdapter(searchHistory.getHistory()){track -> searchHistory.addTrack(track)
+            historyAdapter.updateTracks(searchHistory.getHistory())
+        }
+        historyRecyclerView.layoutManager = LinearLayoutManager(this)
+        historyRecyclerView.adapter = historyAdapter
+
+        adapter = TrackAdapter(tracks){track ->
+            searchHistory.addTrack(track)
+            historyAdapter.updateTracks(searchHistory.getHistory())
+        }
+        trackRecyclerView.layoutManager = LinearLayoutManager(this)
+        trackRecyclerView.adapter = adapter
 
 
         toolbar.setNavigationOnClickListener {
@@ -98,6 +131,18 @@ class SearchActivity : AppCompatActivity() {
                     adapter.notifyDataSetChanged()
                     showMessage("", "")
                 }
+
+
+                val history = searchHistory.getHistory()
+                if(searchEditText.hasFocus() && s?.isEmpty() == true && history.isNotEmpty()){
+                    historyLayout.visibility = View.VISIBLE
+                    trackRecyclerView.visibility = View.GONE
+                    placeholderMessage.visibility = View.GONE
+                    historyAdapter.updateTracks(history)
+                }else{
+                    historyLayout.visibility = View.GONE
+                    trackRecyclerView.visibility = View.VISIBLE
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -106,10 +151,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchEditText.addTextChangedListener(textWatcher)
-
-
-        val trackRecyclerView = findViewById<RecyclerView>(R.id.trackRecyclerView)
-        trackRecyclerView.adapter = adapter
 
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -125,6 +166,31 @@ class SearchActivity : AppCompatActivity() {
 
         refreshButton.setOnClickListener{
             searchQuery(searchEditText.text.toString())
+        }
+
+
+
+
+        searchEditText.setOnFocusChangeListener{view, hasFocus ->
+            val history = searchHistory.getHistory()
+            historyLayout.visibility = if(hasFocus && searchEditText.text.isEmpty() && history.isNotEmpty()){
+                View.VISIBLE
+            }else{
+                View.GONE
+            }
+        }
+
+        //Фокус на поле ввода
+        searchEditText.post{
+            searchEditText.requestFocus()
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT)
+        }
+
+        //Очистка истории
+        clearHistoryButton.setOnClickListener{
+            searchHistory.clearHistory()
+            historyLayout.visibility = View.GONE
         }
 
     }

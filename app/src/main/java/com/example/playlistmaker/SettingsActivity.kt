@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
@@ -54,6 +55,14 @@ class SettingsActivity : AppCompatActivity() {
             val agreementIntent = Intent(Intent.ACTION_VIEW)
             agreementIntent.data = Uri.parse(url)
             startActivity(agreementIntent)
+        }
+
+            //Свич темы
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch_btn_dark_mode)
+        val sharedPrefs = getSharedPreferences(App.PLAYLIST_MAKER_PREFS, MODE_PRIVATE)
+        themeSwitcher.isChecked = sharedPrefs.getBoolean(App.DARK_THEME_KEY, false)
+        themeSwitcher.setOnCheckedChangeListener{switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
         }
     }
 }
