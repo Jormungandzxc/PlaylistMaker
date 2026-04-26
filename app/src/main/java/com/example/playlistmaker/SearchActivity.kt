@@ -88,6 +88,7 @@ class SearchActivity : AppCompatActivity() {
 
         historyAdapter = TrackAdapter(searchHistory.getHistory()){track -> searchHistory.addTrack(track)
             historyAdapter.updateTracks(searchHistory.getHistory())
+            openPlayer(track)
         }
         historyRecyclerView.layoutManager = LinearLayoutManager(this)
         historyRecyclerView.adapter = historyAdapter
@@ -95,6 +96,7 @@ class SearchActivity : AppCompatActivity() {
         adapter = TrackAdapter(tracks){track ->
             searchHistory.addTrack(track)
             historyAdapter.updateTracks(searchHistory.getHistory())
+            openPlayer(track)
         }
         trackRecyclerView.layoutManager = LinearLayoutManager(this)
         trackRecyclerView.adapter = adapter
@@ -253,5 +255,13 @@ class SearchActivity : AppCompatActivity() {
         } else {
             placeholderMessage.visibility = View.GONE
         }
+    }
+
+
+    //Функция открывания плеера
+    private fun openPlayer(track: Track){
+        val intent = Intent(this, PlayerActivity::class.java)
+        intent.putExtra("selected_track", track)
+        startActivity(intent)
     }
 }
