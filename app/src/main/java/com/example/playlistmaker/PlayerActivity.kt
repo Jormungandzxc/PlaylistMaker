@@ -61,11 +61,12 @@ class PlayerActivity:AppCompatActivity() {
                 albumTitle.visibility = View.VISIBLE
             }
 
+            val radiusInPx = resources.getDimensionPixelSize(R.dimen.album_cover_corner_radius)
             Glide.with(this)
                 .load(it.getCoverArtwork())
                 .placeholder(R.drawable.ic_placeholder_player)
                 .centerCrop()
-                .transform(RoundedCorners(8))
+                .transform(RoundedCorners(radiusInPx))
                 .into(albumPlaceholder)
         }
 
