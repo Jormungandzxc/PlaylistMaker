@@ -46,7 +46,7 @@
 
         <TextView
             android:id="@+id/playerTrackName"
-            style="@style/ToolbarTitleTextStyle"
+            style="@style/PlayerTrackNameTS"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -57,7 +57,7 @@
 
         <TextView
             android:id="@+id/playerArtistName"
-            style="@style/ToolbarTitleTextStyle"
+            style="@style/PlayerTrackNameTS"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -97,7 +97,7 @@
 
         <TextView
             android:id="@+id/track_timer"
-            style="@style/ToolbarTitleTextStyle"
+            style="@style/PlayerTrackNameTS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -114,7 +114,7 @@
             android:layout_height="32dp"
             android:layout_marginTop="30dp"
             android:gravity="center_vertical"
-            android:textColor="@color/hint_color"
+            android:textColor="@color/light_gray_color"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="@+id/left_guideline"
             app:layout_constraintTop_toBottomOf="@+id/track_timer"
@@ -126,7 +126,7 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:gravity="center_vertical"
-            android:textColor="@color/hint_color"
+            android:textColor="@color/light_gray_color"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="@+id/left_guideline"
             app:layout_constraintTop_toBottomOf="@+id/trackDuration"
@@ -138,7 +138,7 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:gravity="center_vertical"
-            android:textColor="@color/hint_color"
+            android:textColor="@color/light_gray_color"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="@+id/left_guideline"
             app:layout_constraintTop_toBottomOf="@+id/albumTitle"
@@ -150,7 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:gravity="center_vertical"
-            android:textColor="@color/hint_color"
+            android:textColor="@color/light_gray_color"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="@+id/left_guideline"
             app:layout_constraintTop_toBottomOf="@+id/trackYear"
@@ -162,7 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:gravity="center_vertical"
-            android:textColor="@color/hint_color"
+            android:textColor="@color/light_gray_color"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="@+id/left_guideline"
             app:layout_constraintTop_toBottomOf="@+id/trackGenre"
