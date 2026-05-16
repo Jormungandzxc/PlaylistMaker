@@ -14,6 +14,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
@@ -41,6 +43,9 @@ class SearchActivity : AppCompatActivity() {
 
     private val iTunesService = retrofit.create(ITunesApi::class.java)
     private val tracks = ArrayList<Track>()
+    private val handler = Handler(Looper.getMainLooper())
+
+
     private lateinit var adapter: TrackAdapter
 
     private lateinit var placeholderMessage: LinearLayout
@@ -54,6 +59,13 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var clearHistoryButton: MaterialButton
     private lateinit var historyAdapter: TrackAdapter
+
+
+
+    companion object{
+        private const val SEARCH_TEXT_KEY = "SEARCH_TEXT"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,6 +157,10 @@ class SearchActivity : AppCompatActivity() {
                     historyLayout.visibility = View.GONE
                     trackRecyclerView.visibility = View.VISIBLE
                 }
+
+                if(!s.isNullOrEmpty()){
+                    searchDebounce()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -208,9 +224,6 @@ class SearchActivity : AppCompatActivity() {
         searchText = savedInstanceState.getString(SEARCH_TEXT_KEY, "")
     }
 
-    companion object{
-        private const val SEARCH_TEXT_KEY = "SEARCH_TEXT"
-    }
 
     private fun searchQuery(text: String){
         iTunesService.search(text).enqueue(object : Callback<ITunesResponse>{
@@ -263,5 +276,18 @@ class SearchActivity : AppCompatActivity() {
         val intent = Intent(this, PlayerActivity::class.java)
         intent.putExtra("selected_track", track)
         startActivity(intent)
+    }
+
+
+    //Отложенный поисковой запрос
+    private val searchRunnable = Runnable {
+        if(searchText.isNotEmpty()){
+            searchQuery(searchText)
+        }
+    }
+
+    private fun searchDebounce(){
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 }
