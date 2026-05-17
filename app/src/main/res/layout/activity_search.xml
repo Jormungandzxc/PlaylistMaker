@@ -47,7 +47,6 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        tools:visibility="gone"
         android:id="@+id/trackRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -59,7 +58,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText"
         app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/track_view" />
+        tools:listitem="@layout/track_view"
+        tools:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/placeholderMessage"
@@ -110,7 +110,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText">
+        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintVertical_bias="0.0"
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/historyTitle"
@@ -123,7 +125,8 @@
             android:textSize="19sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/historyRecyclerView"
@@ -134,7 +137,8 @@
             app:layout_constraintBottom_toTopOf="@+id/clearHistoryButton"
             app:layout_constraintTop_toBottomOf="@+id/historyTitle"
             app:layout_constraintVertical_bias="0.0"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/clearHistoryButton"
@@ -147,10 +151,21 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/historyRecyclerView" />
-
+            app:layout_constraintTop_toBottomOf="@+id/historyRecyclerView"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:indeterminateTint="@color/blue_color"
+        android:layout_marginTop="140dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,6 +18,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
@@ -60,9 +61,10 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var clearHistoryButton: MaterialButton
     private lateinit var historyAdapter: TrackAdapter
 
+    private lateinit var progressBar: ProgressBar
 
 
-    companion object{
+    companion object {
         private const val SEARCH_TEXT_KEY = "SEARCH_TEXT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
@@ -88,6 +90,7 @@ class SearchActivity : AppCompatActivity() {
         placeholderText = findViewById<TextView>(R.id.placeholderText)
         refreshButton = findViewById<MaterialButton>(R.id.refreshButton)
         trackRecyclerView = findViewById<RecyclerView>(R.id.trackRecyclerView)
+        progressBar = findViewById<ProgressBar>(R.id.progressBar)
 
 
         //История поиска
@@ -98,14 +101,15 @@ class SearchActivity : AppCompatActivity() {
         historyRecyclerView = findViewById(R.id.historyRecyclerView)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
 
-        historyAdapter = TrackAdapter(searchHistory.getHistory()){track -> searchHistory.addTrack(track)
+        historyAdapter = TrackAdapter(searchHistory.getHistory()) { track ->
+            searchHistory.addTrack(track)
             historyAdapter.updateTracks(searchHistory.getHistory())
             openPlayer(track)
         }
         historyRecyclerView.layoutManager = LinearLayoutManager(this)
         historyRecyclerView.adapter = historyAdapter
 
-        adapter = TrackAdapter(tracks){track ->
+        adapter = TrackAdapter(tracks) { track ->
             searchHistory.addTrack(track)
             historyAdapter.updateTracks(searchHistory.getHistory())
             openPlayer(track)
@@ -122,43 +126,58 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.setText((searchText))
 
 //        Очистка текстового поля
-        clearButton.setOnClickListener{
+        clearButton.setOnClickListener {
             searchEditText.setText("")
 
             //Скрытие клавиатуры
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val inputMethodManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         }
 
-        val textWatcher = object : TextWatcher{
+        val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //empty
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchText = s.toString()
-                clearButton.visibility = if(s.isNullOrEmpty())
+                clearButton.visibility = if (s.isNullOrEmpty())
                     View.GONE else View.VISIBLE
 
-                if(s.isNullOrEmpty()){
+                val history = searchHistory.getHistory()
+
+                if (s.isNullOrEmpty()) {
+                    handler.removeCallbacks(searchRunnable)
                     tracks.clear()
                     adapter.notifyDataSetChanged()
                     showMessage("", "")
+                    placeholderMessage.visibility = View.GONE
+                    progressBar.visibility = View.GONE
+
+                    if (history.isNotEmpty()) {
+                        historyLayout.visibility = View.VISIBLE
+                        trackRecyclerView.visibility = View.GONE
+                        historyAdapter.updateTracks(history)
+                    }
+                } else {
+                    historyLayout.visibility = View.GONE
+                    searchDebounce()
                 }
 
-
-                val history = searchHistory.getHistory()
-                if(searchEditText.hasFocus() && s?.isEmpty() == true && history.isNotEmpty()){
+                if (searchEditText.hasFocus() && s?.isEmpty() == true && history.isNotEmpty()) {
                     historyLayout.visibility = View.VISIBLE
                     trackRecyclerView.visibility = View.GONE
                     placeholderMessage.visibility = View.GONE
                     historyAdapter.updateTracks(history)
-                }else{
+                } else {
                     historyLayout.visibility = View.GONE
-                    trackRecyclerView.visibility = View.VISIBLE
+                    searchDebounce()
                 }
 
-                if(!s.isNullOrEmpty()){
+                if (!s.isNullOrEmpty()) {
+                    historyLayout.visibility = View.GONE
+                    placeholderMessage.visibility = View.GONE
                     searchDebounce()
                 }
             }
@@ -172,8 +191,8 @@ class SearchActivity : AppCompatActivity() {
 
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-                if(searchEditText.text.isNotEmpty()){
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (searchEditText.text.isNotEmpty()) {
                     searchQuery(searchEditText.text.toString())
                 }
                 true
@@ -182,31 +201,33 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
-        refreshButton.setOnClickListener{
+        refreshButton.setOnClickListener {
             searchQuery(searchEditText.text.toString())
         }
 
 
 
 
-        searchEditText.setOnFocusChangeListener{view, hasFocus ->
+        searchEditText.setOnFocusChangeListener { view, hasFocus ->
             val history = searchHistory.getHistory()
-            historyLayout.visibility = if(hasFocus && searchEditText.text.isEmpty() && history.isNotEmpty()){
-                View.VISIBLE
-            }else{
-                View.GONE
-            }
+            historyLayout.visibility =
+                if (hasFocus && searchEditText.text.isEmpty() && history.isNotEmpty()) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
         }
 
         //Фокус на поле ввода
-        searchEditText.post{
+        searchEditText.post {
             searchEditText.requestFocus()
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val inputMethodManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.showSoftInput(searchEditText, InputMethodManager.SHOW_IMPLICIT)
         }
 
         //Очистка истории
-        clearHistoryButton.setOnClickListener{
+        clearHistoryButton.setOnClickListener {
             searchHistory.clearHistory()
             historyLayout.visibility = View.GONE
         }
@@ -225,30 +246,47 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-    private fun searchQuery(text: String){
-        iTunesService.search(text).enqueue(object : Callback<ITunesResponse>{
-            override fun onResponse(
-                call: Call<ITunesResponse>,
-                response: Response<ITunesResponse>
-            ) {
-                if(response.code() == 200){
-                    tracks.clear()
-                    if(response.body()?.results?.isNotEmpty() == true){
-                        tracks.addAll(response.body()?.results!!)
-                        adapter.notifyDataSetChanged()
-                        showMessage("", "")
-                    } else{
-                        showMessage(getString(R.string.nothing_found), "")
-                    }
-                } else{
-                    showMessage(getString(R.string.something_went_wrong), "error")
-                }
-            }
+    private fun searchQuery(text: String) {
+        //progressBar
+        if (text.isNotEmpty()) {
+            progressBar.visibility = View.VISIBLE
+            trackRecyclerView.visibility = View.GONE
+            placeholderMessage.visibility = View.GONE
 
-            override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
-                showMessage(getString(R.string.something_went_wrong), getString(R.string.something_went_wrong_additional_message))
-            }
-        })
+
+            //Выполнение запроса
+            iTunesService.search(text).enqueue(object : Callback<ITunesResponse> {
+                override fun onResponse(
+                    call: Call<ITunesResponse>,
+                    response: Response<ITunesResponse>
+                ) {
+                    progressBar.visibility = View.GONE
+
+                    if (response.code() == 200) {
+                        tracks.clear()
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            tracks.addAll(response.body()?.results!!)
+                            adapter.notifyDataSetChanged()
+                            showMessage("", "")
+                            trackRecyclerView.visibility = View.VISIBLE
+                            placeholderMessage.visibility = View.GONE
+                        } else {
+                            showMessage(getString(R.string.nothing_found), "")
+                        }
+                    } else {
+                        showMessage(getString(R.string.something_went_wrong), "error")
+                    }
+                }
+
+                override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
+                    progressBar.visibility = View.GONE
+                    showMessage(
+                        getString(R.string.something_went_wrong),
+                        getString(R.string.something_went_wrong_additional_message)
+                    )
+                }
+            })
+        }
     }
 
     //Функция для отображения заглушки
@@ -272,7 +310,7 @@ class SearchActivity : AppCompatActivity() {
 
 
     //Функция открывания плеера
-    private fun openPlayer(track: Track){
+    private fun openPlayer(track: Track) {
         val intent = Intent(this, PlayerActivity::class.java)
         intent.putExtra("selected_track", track)
         startActivity(intent)
@@ -281,12 +319,12 @@ class SearchActivity : AppCompatActivity() {
 
     //Отложенный поисковой запрос
     private val searchRunnable = Runnable {
-        if(searchText.isNotEmpty()){
+        if (searchText.isNotEmpty()) {
             searchQuery(searchText)
         }
     }
 
-    private fun searchDebounce(){
+    private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
