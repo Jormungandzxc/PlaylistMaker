@@ -67,6 +67,7 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_TEXT_KEY = "SEARCH_TEXT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -311,9 +312,11 @@ class SearchActivity : AppCompatActivity() {
 
     //Функция открывания плеера
     private fun openPlayer(track: Track) {
-        val intent = Intent(this, PlayerActivity::class.java)
-        intent.putExtra("selected_track", track)
-        startActivity(intent)
+        if(clickDebounce()){
+            val intent = Intent(this, PlayerActivity::class.java)
+            intent.putExtra("selected_track", track)
+            startActivity(intent)
+        }
     }
 
 
@@ -327,5 +330,16 @@ class SearchActivity : AppCompatActivity() {
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    //Debounce открытия плера
+    private var isClickAllowed = true
+    private fun clickDebounce(): Boolean{
+        val current = isClickAllowed
+        if(isClickAllowed){
+            isClickAllowed = false
+            handler.postDelayed({isClickAllowed = true}, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 }
