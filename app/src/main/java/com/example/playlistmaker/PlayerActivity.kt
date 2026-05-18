@@ -2,6 +2,8 @@ package com.example.playlistmaker
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -25,6 +27,8 @@ class PlayerActivity:AppCompatActivity() {
     private var playerState = STATE_DEFAULT
     private var mediaPlayer = MediaPlayer()
     private lateinit var playButton: ImageButton
+    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var timerTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +48,7 @@ class PlayerActivity:AppCompatActivity() {
         val countryValue =  findViewById<TextView>(R.id.countryValue)
 
         playButton = findViewById(R.id.playButton)
+        timerTextView = findViewById(R.id.track_timer)
 
         //ToolBar
         toolbar.setNavigationOnClickListener { finish() }
@@ -105,6 +110,7 @@ class PlayerActivity:AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacks(updateTimerRunnable)
         mediaPlayer.release()
     }
 
@@ -119,6 +125,9 @@ class PlayerActivity:AppCompatActivity() {
         }
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
+            handler.removeCallbacks(updateTimerRunnable)
+            timerTextView.text = "00:00"
+            playButton.setImageResource(R.drawable.ic_play_btn)
         }
     }
 
@@ -127,12 +136,14 @@ class PlayerActivity:AppCompatActivity() {
         mediaPlayer.start()
         playButton.setImageResource(R.drawable.ic_pause_btn)
         playerState = STATE_PLAYING
+        handler.post(updateTimerRunnable)
     }
 
     private fun pausePlayer(playButton: ImageButton){
         mediaPlayer.pause()
         playButton.setImageResource(R.drawable.ic_play_btn)
         playerState = STATE_PAUSED
+        handler.removeCallbacks(updateTimerRunnable)
     }
 
     private fun playbackControl(playButton: ImageButton){
@@ -142,6 +153,17 @@ class PlayerActivity:AppCompatActivity() {
             }
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer(playButton)
+            }
+        }
+    }
+
+    //Runnable для обновления времени
+    private val updateTimerRunnable = object : Runnable{
+        override fun run() {
+            if(playerState == STATE_PLAYING){
+                val currentPosition = mediaPlayer.currentPosition
+                timerTextView.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(currentPosition)
+                handler.postDelayed(this, 300L)
             }
         }
     }
