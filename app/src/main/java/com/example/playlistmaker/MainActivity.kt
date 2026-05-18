@@ -16,6 +16,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //Окраска статус бара и навигации
+        val windowController = ViewCompat.getWindowInsetsController(window.decorView)
+        val statusBarColor = getColor(R.color.blue_color)
+        val navigationBarColor = getColor(R.color.blue_color)
+        window.statusBarColor = statusBarColor
+        window.navigationBarColor = navigationBarColor
+        windowController?.isAppearanceLightStatusBars = true
+        windowController?.isAppearanceLightNavigationBars = true
+
+        //Обработка нажатий
         val searchButton = findViewById<MaterialButton>(R.id.btn_search)
 
         val searchButtonClickListener: View.OnClickListener = object : View.OnClickListener{
