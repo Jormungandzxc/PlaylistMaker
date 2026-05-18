@@ -1,7 +1,10 @@
 package com.example.playlistmaker
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +15,17 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity:AppCompatActivity() {
+    companion object{
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+    }
+
+    private var playerState = STATE_DEFAULT
+    private var mediaPlayer = MediaPlayer()
+    private lateinit var playButton: ImageButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
@@ -28,6 +42,8 @@ class PlayerActivity:AppCompatActivity() {
         val yearValue = findViewById<TextView>(R.id.trackYearValue)
         val genreValue = findViewById<TextView>(R.id.trackGenreValue)
         val countryValue =  findViewById<TextView>(R.id.countryValue)
+
+        playButton = findViewById(R.id.playButton)
 
         //ToolBar
         toolbar.setNavigationOnClickListener { finish() }
@@ -68,11 +84,66 @@ class PlayerActivity:AppCompatActivity() {
                 .centerCrop()
                 .transform(RoundedCorners(radiusInPx))
                 .into(albumPlaceholder)
+
+            //Подготовка плеера
+            preparePlayer(it.previewUrl)
+        }
+
+        playButton.setOnClickListener{
+            playbackControl(playButton)
         }
 
         //бегущая строка альбома
         albumValue.isSelected = true
 
-
     }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer(playButton)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
+
+    //Подготовка плеера
+    private fun preparePlayer(url: String?){
+        if (url.isNullOrEmpty()) return
+
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener{
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playerState = STATE_PREPARED
+        }
+    }
+
+    //Измеенение состояния плеера
+    private fun  startPlayer(playButton: ImageButton){
+        mediaPlayer.start()
+        playButton.setImageResource(R.drawable.ic_pause_btn)
+        playerState = STATE_PLAYING
+    }
+
+    private fun pausePlayer(playButton: ImageButton){
+        mediaPlayer.pause()
+        playButton.setImageResource(R.drawable.ic_play_btn)
+        playerState = STATE_PAUSED
+    }
+
+    private fun playbackControl(playButton: ImageButton){
+        when(playerState){
+            STATE_PLAYING -> {
+                pausePlayer(playButton)
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer(playButton)
+            }
+        }
+    }
+
 }
