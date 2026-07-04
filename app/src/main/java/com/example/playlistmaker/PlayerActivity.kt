@@ -17,18 +17,15 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity:AppCompatActivity() {
-    companion object{
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-    }
 
     private var playerState = STATE_DEFAULT
     private var mediaPlayer = MediaPlayer()
     private lateinit var playButton: ImageButton
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var timerTextView: TextView
+    private val dateFormat by lazy{
+        SimpleDateFormat("mm:ss", Locale.getDefault())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,7 +123,7 @@ class PlayerActivity:AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
             handler.removeCallbacks(updateTimerRunnable)
-            timerTextView.text = "00:00"
+            timerTextView.text = getString(R.string.timerTVText)
             playButton.setImageResource(R.drawable.ic_play_btn)
         }
     }
@@ -162,10 +159,18 @@ class PlayerActivity:AppCompatActivity() {
         override fun run() {
             if(playerState == STATE_PLAYING){
                 val currentPosition = mediaPlayer.currentPosition
-                timerTextView.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(currentPosition)
-                handler.postDelayed(this, 300L)
+                timerTextView.text = dateFormat.format(currentPosition)
+                handler.postDelayed(this, TIMER_DELAY_MILLIS)
             }
         }
+    }
+
+    companion object{
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val TIMER_DELAY_MILLIS = 300L
     }
 
 }

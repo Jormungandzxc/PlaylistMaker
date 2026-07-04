@@ -342,4 +342,10 @@ class SearchActivity : AppCompatActivity() {
         }
         return current
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(searchRunnable)
+    }
 }
