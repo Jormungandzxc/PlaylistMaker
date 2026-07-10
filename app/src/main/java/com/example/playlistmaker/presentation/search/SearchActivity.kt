@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.search
 
 import android.content.Intent
 import android.os.Bundle
@@ -21,9 +21,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.SearchHistory
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.data.dto.ITunesResponse
+import com.example.playlistmaker.data.network.ITunesApi
+import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.android.material.button.MaterialButton
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
