@@ -1,9 +1,14 @@
 package com.example.playlistmaker
 
+import android.content.Context
+import com.example.playlistmaker.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.TracksRepositoryImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.api.TracksRepository
+import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 
 object Creator {
@@ -13,5 +18,14 @@ object Creator {
 
     fun provideTracksInteractor(): TracksInteractor{
         return TracksInteractorImpl(getTracksRepository())
+    }
+
+    private fun getSearchHistoryRepository(context: Context): SearchHistoryRepository{
+        val sharedPrefs = context.getSharedPreferences("playlist_maker_prefs", Context.MODE_PRIVATE)
+        return SearchHistoryRepositoryImpl(sharedPrefs)
+    }
+
+    fun provideSearchHistoryInteractor(context: Context): SearchHistoryInteractor{
+        return SearchHistoryInteractorImpl(getSearchHistoryRepository(context))
     }
 }

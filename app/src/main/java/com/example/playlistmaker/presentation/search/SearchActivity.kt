@@ -23,36 +23,25 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.SearchHistory
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.data.dto.ITunesResponse
-import com.example.playlistmaker.data.network.ITunesApi
+import com.example.playlistmaker.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.android.material.button.MaterialButton
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class SearchActivity : AppCompatActivity() {
     //Переменная для хранения текста
     private var searchText: String = ""
 
-    private val iTunesBaseUrl = "https://itunes.apple.com"
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesService = retrofit.create(ITunesApi::class.java)
     private val tracks = ArrayList<Track>()
     private val handler = Handler(Looper.getMainLooper())
 
 
     private lateinit var adapter: TrackAdapter
+    private lateinit var tracksInteractor: TracksInteractor
 
     private lateinit var placeholderMessage: LinearLayout
     private lateinit var placeholderImage: ImageView
@@ -61,7 +50,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackRecyclerView: RecyclerView
     private lateinit var historyLayout: ConstraintLayout
 
-    private lateinit var searchHistory: SearchHistory
+    private lateinit var searchHistoryInteractor: SearchHistoryInteractor
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var clearHistoryButton: MaterialButton
     private lateinit var historyAdapter: TrackAdapter
@@ -98,26 +87,27 @@ class SearchActivity : AppCompatActivity() {
         trackRecyclerView = findViewById<RecyclerView>(R.id.trackRecyclerView)
         progressBar = findViewById<ProgressBar>(R.id.progressBar)
 
+        tracksInteractor = Creator.provideTracksInteractor()
+
 
         //История поиска
-        val sharedPrefs = getSharedPreferences("playlist_maker_prefs", MODE_PRIVATE)
-        searchHistory = SearchHistory(sharedPrefs)
 
+        searchHistoryInteractor = Creator.provideSearchHistoryInteractor(this)
         historyLayout = findViewById(R.id.historyLayout)
         historyRecyclerView = findViewById(R.id.historyRecyclerView)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
 
-        historyAdapter = TrackAdapter(searchHistory.getHistory()) { track ->
-            searchHistory.addTrack(track)
-            historyAdapter.updateTracks(searchHistory.getHistory())
+        historyAdapter = TrackAdapter(ArrayList(searchHistoryInteractor.getHistory())) { track ->
+            searchHistoryInteractor.saveTrack(track)
+            historyAdapter.updateTracks(searchHistoryInteractor.getHistory())
             openPlayer(track)
         }
         historyRecyclerView.layoutManager = LinearLayoutManager(this)
         historyRecyclerView.adapter = historyAdapter
 
         adapter = TrackAdapter(tracks) { track ->
-            searchHistory.addTrack(track)
-            historyAdapter.updateTracks(searchHistory.getHistory())
+            searchHistoryInteractor.saveTrack(track)
+            historyAdapter.updateTracks(searchHistoryInteractor.getHistory())
             openPlayer(track)
         }
         trackRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -151,7 +141,7 @@ class SearchActivity : AppCompatActivity() {
                 clearButton.visibility = if (s.isNullOrEmpty())
                     View.GONE else View.VISIBLE
 
-                val history = searchHistory.getHistory()
+                val history = searchHistoryInteractor.getHistory()
 
                 if (s.isNullOrEmpty()) {
                     handler.removeCallbacks(searchRunnable)
@@ -215,7 +205,7 @@ class SearchActivity : AppCompatActivity() {
 
 
         searchEditText.setOnFocusChangeListener { view, hasFocus ->
-            val history = searchHistory.getHistory()
+            val history = searchHistoryInteractor.getHistory()
             historyLayout.visibility =
                 if (hasFocus && searchEditText.text.isEmpty() && history.isNotEmpty()) {
                     View.VISIBLE
@@ -234,7 +224,7 @@ class SearchActivity : AppCompatActivity() {
 
         //Очистка истории
         clearHistoryButton.setOnClickListener {
-            searchHistory.clearHistory()
+            searchHistoryInteractor.clearHistory()
             historyLayout.visibility = View.GONE
         }
 
@@ -258,38 +248,34 @@ class SearchActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             trackRecyclerView.visibility = View.GONE
             placeholderMessage.visibility = View.GONE
+            placeholderImage.visibility = View.GONE
+            refreshButton.visibility = View.GONE
 
 
             //Выполнение запроса
-            iTunesService.search(text).enqueue(object : Callback<ITunesResponse> {
-                override fun onResponse(
-                    call: Call<ITunesResponse>,
-                    response: Response<ITunesResponse>
-                ) {
-                    progressBar.visibility = View.GONE
 
-                    if (response.code() == 200) {
-                        tracks.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            tracks.addAll(response.body()?.results!!)
-                            adapter.notifyDataSetChanged()
-                            showMessage("", "")
-                            trackRecyclerView.visibility = View.VISIBLE
-                            placeholderMessage.visibility = View.GONE
-                        } else {
-                            showMessage(getString(R.string.nothing_found), "")
+
+            tracksInteractor.searchTracks(text, object : TracksInteractor.TracksConsumer {
+                override fun consume(foundTracks: List<Track>?) {
+                    handler.post {
+                        progressBar.visibility = View.GONE
+                        if (foundTracks != null) {
+                            //Данные получены с сервера
+                            if (foundTracks.isNotEmpty()) {
+                                tracks.clear()
+                                tracks.addAll(foundTracks)
+                                adapter.notifyDataSetChanged()
+                                trackRecyclerView.visibility = View.VISIBLE
+                            } else {
+                                //Ответ 200, но список пустой
+                                trackRecyclerView.visibility = View.GONE
+                                showMessage(getString(R.string.nothing_found), "")
+                            }
+                        } else{
+                            trackRecyclerView.visibility = View.GONE
+                            showMessage(getString(R.string.something_went_wrong), "Загрузка не удалась. Проверьте подключение к интернету")
                         }
-                    } else {
-                        showMessage(getString(R.string.something_went_wrong), "error")
                     }
-                }
-
-                override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
-                    progressBar.visibility = View.GONE
-                    showMessage(
-                        getString(R.string.something_went_wrong),
-                        getString(R.string.something_went_wrong_additional_message)
-                    )
                 }
             })
         }
@@ -299,6 +285,7 @@ class SearchActivity : AppCompatActivity() {
     private fun showMessage(text: String, additionalMessage: String) {
         if (text.isNotEmpty()) {
             placeholderMessage.visibility = View.VISIBLE
+            placeholderImage.visibility = View.VISIBLE
             tracks.clear()
             adapter.notifyDataSetChanged()
             placeholderText.text = text
@@ -317,7 +304,7 @@ class SearchActivity : AppCompatActivity() {
 
     //Функция открывания плеера
     private fun openPlayer(track: Track) {
-        if(clickDebounce()){
+        if (clickDebounce()) {
             val intent = Intent(this, PlayerActivity::class.java)
             intent.putExtra("selected_track", track)
             startActivity(intent)
@@ -339,11 +326,11 @@ class SearchActivity : AppCompatActivity() {
 
     //Debounce открытия плера
     private var isClickAllowed = true
-    private fun clickDebounce(): Boolean{
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
-        if(isClickAllowed){
+        if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({isClickAllowed = true}, CLICK_DEBOUNCE_DELAY)
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
     }

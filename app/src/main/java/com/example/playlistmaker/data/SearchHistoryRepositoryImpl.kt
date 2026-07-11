@@ -1,27 +1,20 @@
 package com.example.playlistmaker.data
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
-const val SEARCH_HISTORY_GEY = "key_for_search_history"
+const val SEARCH_HISTORY_KEY = "key_for_search_history"
 
-class SearchHistory (private val sharedPreferences: SharedPreferences){
+class SearchHistoryRepositoryImpl (private val sharedPreferences: SharedPreferences) : SearchHistoryRepository{
+
     private val gson = Gson()
 
-    //Чтение списка из SP
-    fun getHistory(): ArrayList<Track>{
-        val json = sharedPreferences.getString(SEARCH_HISTORY_KEY, null) ?:
-        return arrayListOf()
-        val type = object : TypeToken<ArrayList<Track>>(){}.type
-        return  gson.fromJson(json, type)
-    }
-
-    //Добавление трека в историю
-    fun addTrack(track: Track){
-        val history = getHistory()
+    override fun saveTrack(track: Track) {
+        val history = getHistory().toMutableList()
 
         // Удаление старого индекса повторяющегося трека
         val existingTrackIndex = history.indexOfFirst{it.trackId == track.trackId}
@@ -38,14 +31,18 @@ class SearchHistory (private val sharedPreferences: SharedPreferences){
         saveHistory(history)
     }
 
-    //Очистка истории
-    fun clearHistory(){
-        sharedPreferences.edit()
-            .remove(SEARCH_HISTORY_KEY)
-            .apply()
+    override fun getHistory(): ArrayList<Track>{
+        val json = sharedPreferences.getString(SEARCH_HISTORY_KEY, null) ?:
+        return arrayListOf()
+        val type = object : TypeToken<ArrayList<Track>>(){}.type
+        return  gson.fromJson(json, type)
     }
 
-    private fun saveHistory(history: ArrayList<Track>){
+    override fun clearHistory() {
+        sharedPreferences.edit().clear().apply()
+    }
+
+    private fun saveHistory(history: List<Track>) {
         val json = gson.toJson(history)
         sharedPreferences.edit()
             .putString(SEARCH_HISTORY_KEY, json)
