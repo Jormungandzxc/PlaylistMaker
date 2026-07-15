@@ -11,7 +11,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.google.android.material.appbar.MaterialToolbar
 import java.text.SimpleDateFormat
@@ -19,18 +21,30 @@ import java.util.Locale
 
 class PlayerActivity:AppCompatActivity() {
 
-    private var playerState = STATE_DEFAULT
-    private var mediaPlayer = MediaPlayer()
     private lateinit var playButton: ImageButton
-    private val handler = Handler(Looper.getMainLooper())
     private lateinit var timerTextView: TextView
+    private lateinit var playerInteractor: PlayerInteractor
+
+    private val handler = Handler(Looper.getMainLooper())
     private val dateFormat by lazy{
         SimpleDateFormat("mm:ss", Locale.getDefault())
+    }
+
+    private var playerState = STATE_DEFAULT
+
+    companion object{
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val TIMER_DELAY_MILLIS = 300L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
+
+        playerInteractor = Creator.providePlayerInteractor()
 
         val toolbar = findViewById<MaterialToolbar>(R.id.searchToolbar)
         val albumPlaceholder = findViewById<ImageView>(R.id.albumPlaceholder)
@@ -89,11 +103,27 @@ class PlayerActivity:AppCompatActivity() {
                 .into(albumPlaceholder)
 
             //Подготовка плеера
-            preparePlayer(it.previewUrl)
+            track.previewUrl?.let { url ->
+                playerInteractor.preparePlayer(
+                    previewUrl = url,
+                    onPrepared = {
+                        playButton.isEnabled = true
+                        playerState = STATE_PREPARED
+                        playButton.setImageResource(R.drawable.ic_play_btn)
+                    },
+                    onCompletion = {
+                        playerState = STATE_PREPARED
+                        playButton.setImageResource(R.drawable.ic_play_btn)
+                        timerTextView.text =getString(R.string.timerTVText)
+                        handler.removeCallbacks(updateTimerRunnable)
+                    }
+                )
+            }
         }
 
+        playButton.isEnabled = false
         playButton.setOnClickListener{
-            playbackControl(playButton)
+            playbackControl()
         }
 
         //бегущая строка альбома
@@ -103,54 +133,37 @@ class PlayerActivity:AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer(playButton)
+        pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        playerInteractor.releasePlayer()
         handler.removeCallbacks(updateTimerRunnable)
-        mediaPlayer.release()
-    }
-
-    //Подготовка плеера
-    private fun preparePlayer(url: String?){
-        if (url.isNullOrEmpty()) return
-
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener{
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
-            handler.removeCallbacks(updateTimerRunnable)
-            timerTextView.text = getString(R.string.timerTVText)
-            playButton.setImageResource(R.drawable.ic_play_btn)
-        }
     }
 
     //Измеенение состояния плеера
-    private fun  startPlayer(playButton: ImageButton){
-        mediaPlayer.start()
+    private fun  startPlayer(){
+        playerInteractor.startPlayer()
         playButton.setImageResource(R.drawable.ic_pause_btn)
         playerState = STATE_PLAYING
         handler.post(updateTimerRunnable)
     }
 
-    private fun pausePlayer(playButton: ImageButton){
-        mediaPlayer.pause()
+    private fun pausePlayer(){
+        playerInteractor.pausePlayer()
         playButton.setImageResource(R.drawable.ic_play_btn)
         playerState = STATE_PAUSED
         handler.removeCallbacks(updateTimerRunnable)
     }
 
-    private fun playbackControl(playButton: ImageButton){
+    private fun playbackControl(){
         when(playerState){
             STATE_PLAYING -> {
-                pausePlayer(playButton)
+                pausePlayer()
             }
             STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer(playButton)
+                startPlayer()
             }
         }
     }
@@ -159,19 +172,13 @@ class PlayerActivity:AppCompatActivity() {
     private val updateTimerRunnable = object : Runnable{
         override fun run() {
             if(playerState == STATE_PLAYING){
-                val currentPosition = mediaPlayer.currentPosition
+                val currentPosition = playerInteractor.getCurrentPosition()
                 timerTextView.text = dateFormat.format(currentPosition)
                 handler.postDelayed(this, TIMER_DELAY_MILLIS)
             }
         }
     }
 
-    companion object{
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val TIMER_DELAY_MILLIS = 300L
-    }
+
 
 }

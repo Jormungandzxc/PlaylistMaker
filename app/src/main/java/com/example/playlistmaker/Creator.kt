@@ -5,12 +5,14 @@ import com.example.playlistmaker.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.ThemeRepositoryImpl
 import com.example.playlistmaker.data.TracksRepositoryImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.ThemeInteractor
 import com.example.playlistmaker.domain.api.ThemeRepository
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.api.TracksRepository
+import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.ThemeInteractorImpl
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
@@ -41,5 +43,10 @@ object Creator {
 
     fun provideThemeInteractor(context: Context): ThemeInteractor{
         return ThemeInteractorImpl(getThemeRepository(context))
+    }
+
+    //Плеер
+    fun providePlayerInteractor(): PlayerInteractor{
+        return PlayerInteractorImpl()
     }
 }
