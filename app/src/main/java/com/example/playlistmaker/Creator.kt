@@ -2,13 +2,17 @@ package com.example.playlistmaker
 
 import android.content.Context
 import com.example.playlistmaker.data.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.data.ThemeRepositoryImpl
 import com.example.playlistmaker.data.TracksRepositoryImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.SearchHistoryRepository
+import com.example.playlistmaker.domain.api.ThemeInteractor
+import com.example.playlistmaker.domain.api.ThemeRepository
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
+import com.example.playlistmaker.domain.impl.ThemeInteractorImpl
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 
 object Creator {
@@ -27,5 +31,15 @@ object Creator {
 
     fun provideSearchHistoryInteractor(context: Context): SearchHistoryInteractor{
         return SearchHistoryInteractorImpl(getSearchHistoryRepository(context))
+    }
+
+    //Настройки темы
+    private fun getThemeRepository(context: Context): ThemeRepository{
+        val sharedPrefs = context.getSharedPreferences(App.PLAYLIST_MAKER_PREFS, Context.MODE_PRIVATE)
+        return ThemeRepositoryImpl(sharedPrefs)
+    }
+
+    fun provideThemeInteractor(context: Context): ThemeInteractor{
+        return ThemeInteractorImpl(getThemeRepository(context))
     }
 }

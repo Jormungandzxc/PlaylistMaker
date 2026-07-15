@@ -5,15 +5,22 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.App
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.ThemeInteractor
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var themeInteractor: ThemeInteractor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        themeInteractor = Creator.provideThemeInteractor(this)
 
         val toolbar = findViewById<MaterialToolbar>(R.id.settingsToolbar)
 
@@ -21,6 +28,7 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
+        //Кнопка Поделиться
         val shareButton = findViewById<MaterialTextView>(R.id.btn_share)
 
         shareButton.setOnClickListener {
@@ -31,6 +39,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_chooser_title)))
         }
 
+        // Кнопка Поддержка
         val supportButton = findViewById<MaterialTextView>(R.id.btn_support)
 
         supportButton.setOnClickListener {
@@ -44,6 +53,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(supportIntent)
         }
 
+        //Кнопка Пользовательского Соглашения
         val userAgreementButton = findViewById<MaterialTextView>(R.id.btn_user_agreement)
 
         userAgreementButton.setOnClickListener {
@@ -55,9 +65,9 @@ class SettingsActivity : AppCompatActivity() {
 
             //Свич темы
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch_btn_dark_mode)
-        val sharedPrefs = getSharedPreferences(App.PLAYLIST_MAKER_PREFS, MODE_PRIVATE)
-        themeSwitcher.isChecked = sharedPrefs.getBoolean(App.DARK_THEME_KEY, false)
-        themeSwitcher.setOnCheckedChangeListener{switcher, checked ->
+        themeSwitcher.isChecked = themeInteractor.isDarkThemeEnabled()
+        themeSwitcher.setOnCheckedChangeListener{_, checked ->
+            themeInteractor.saveTheme(checked)
             (applicationContext as App).switchTheme(checked)
         }
     }
