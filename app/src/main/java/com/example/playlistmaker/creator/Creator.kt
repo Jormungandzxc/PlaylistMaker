@@ -1,6 +1,7 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.creator
 
 import android.content.Context
+import com.example.playlistmaker.App
 import com.example.playlistmaker.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.ThemeRepositoryImpl
 import com.example.playlistmaker.data.TracksRepositoryImpl

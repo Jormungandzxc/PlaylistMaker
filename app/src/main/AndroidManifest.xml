@@ -27,7 +27,7 @@
             android:name=".presentation.LibraryActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.settings.SettingsActivity"
+            android:name=".settings.ui.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.MainActivity"
