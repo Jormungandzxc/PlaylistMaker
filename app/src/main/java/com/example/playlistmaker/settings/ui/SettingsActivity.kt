@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.App
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.api.ThemeInteractor
+import com.example.playlistmaker.settings.domain.ThemeInteractor
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView

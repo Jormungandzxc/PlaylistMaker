@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.search.SearchActivity">
+    tools:context=".search.ui.SearchActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/searchToolbar"
+        android:id="@+id/playerToolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         app:title="@string/title_search"
@@ -32,7 +32,7 @@
         android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchToolbar"/>
+        app:layout_constraintTop_toBottomOf="@+id/playerToolbar"/>
 
     <ImageView
         android:id="@+id/clearButton"
