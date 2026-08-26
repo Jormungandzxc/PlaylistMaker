@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.creator.Creator
@@ -22,28 +23,11 @@ class PlayerActivity:AppCompatActivity() {
 
     private lateinit var playButton: ImageButton
     private lateinit var timerTextView: TextView
-    private lateinit var playerInteractor: PlayerInteractor
-
-    private val handler = Handler(Looper.getMainLooper())
-    private val dateFormat by lazy{
-        SimpleDateFormat("mm:ss", Locale.getDefault())
-    }
-
-    private var playerState = STATE_DEFAULT
-
-    companion object{
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val TIMER_DELAY_MILLIS = 300L
-    }
+    private lateinit var viewModel: PlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
-
-        playerInteractor = Creator.providePlayerInteractor()
 
         val toolbar = findViewById<MaterialToolbar>(R.id.playerToolbar)
         val albumPlaceholder = findViewById<ImageView>(R.id.albumPlaceholder)
@@ -67,6 +51,31 @@ class PlayerActivity:AppCompatActivity() {
 
         //Получение объекта трека
         val track = intent.getSerializableExtra("selected_track") as? Track
+
+        //Иницилизация ViewModel через Factory
+        val previewUrl = track?.previewUrl.orEmpty()
+        val factory = PlayerViewModelFactory(previewUrl, Creator.providePlayerInteractor())
+        viewModel = ViewModelProvider(this, factory)[PlayerViewModel::class.java]
+
+        //Подписка на LiveData состояние плеера
+        viewModel.playerStateLiveData.observe(this){state ->
+            when(state){
+                1, 3 -> {
+                    playButton.isEnabled = true
+                    playButton.setImageResource(R.drawable.ic_play_btn)
+                }
+                2 -> {
+                    playButton.isEnabled = true
+                    playButton.setImageResource(R.drawable.ic_pause_btn)
+                }
+            }
+        }
+
+        //Подписка на LiveData времени трека
+        viewModel.timerLiveData.observe(this){time ->
+            timerTextView.text = time
+        }
+
 
         track?.let {
             trackName.text = it.trackName
@@ -101,28 +110,11 @@ class PlayerActivity:AppCompatActivity() {
                 .transform(RoundedCorners(radiusInPx))
                 .into(albumPlaceholder)
 
-            //Подготовка плеера
-            track.previewUrl?.let { url ->
-                playerInteractor.preparePlayer(
-                    previewUrl = url,
-                    onPrepared = {
-                        playButton.isEnabled = true
-                        playerState = STATE_PREPARED
-                        playButton.setImageResource(R.drawable.ic_play_btn)
-                    },
-                    onCompletion = {
-                        playerState = STATE_PREPARED
-                        playButton.setImageResource(R.drawable.ic_play_btn)
-                        timerTextView.text =getString(R.string.timerTVText)
-                        handler.removeCallbacks(updateTimerRunnable)
-                    }
-                )
-            }
         }
 
         playButton.isEnabled = false
         playButton.setOnClickListener{
-            playbackControl()
+            viewModel.playbackControl()
         }
 
         //бегущая строка альбома
@@ -132,51 +124,11 @@ class PlayerActivity:AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        viewModel.pausePlayer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        playerInteractor.releasePlayer()
-        handler.removeCallbacks(updateTimerRunnable)
-    }
 
-    //Измеенение состояния плеера
-    private fun  startPlayer(){
-        playerInteractor.startPlayer()
-        playButton.setImageResource(R.drawable.ic_pause_btn)
-        playerState = STATE_PLAYING
-        handler.post(updateTimerRunnable)
-    }
 
-    private fun pausePlayer(){
-        playerInteractor.pausePlayer()
-        playButton.setImageResource(R.drawable.ic_play_btn)
-        playerState = STATE_PAUSED
-        handler.removeCallbacks(updateTimerRunnable)
-    }
-
-    private fun playbackControl(){
-        when(playerState){
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
-    }
-
-    //Runnable для обновления времени
-    private val updateTimerRunnable = object : Runnable{
-        override fun run() {
-            if(playerState == STATE_PLAYING){
-                val currentPosition = playerInteractor.getCurrentPosition()
-                timerTextView.text = dateFormat.format(currentPosition)
-                handler.postDelayed(this, TIMER_DELAY_MILLIS)
-            }
-        }
-    }
 
 
 
