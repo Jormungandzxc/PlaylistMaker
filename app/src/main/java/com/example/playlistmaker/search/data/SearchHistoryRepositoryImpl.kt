@@ -40,7 +40,7 @@ class SearchHistoryRepositoryImpl (private val sharedPreferences: SharedPreferen
     }
 
     override fun clearHistory() {
-        sharedPreferences.edit().clear().apply()
+        sharedPreferences.edit().remove(SEARCH_HISTORY_KEY).apply()
     }
 
     private fun saveHistory(history: List<Track>) {
