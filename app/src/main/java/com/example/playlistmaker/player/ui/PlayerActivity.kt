@@ -1,8 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -15,7 +13,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.search.domain.Track
 import com.google.android.material.appbar.MaterialToolbar
 import java.text.SimpleDateFormat

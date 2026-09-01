@@ -1,4 +1,5 @@
 package com.example.playlistmaker.settings.domain
 
-class ThemeSettings {
-}
+data class ThemeSettings (
+    val isDarkThemeEnabled: Boolean
+)

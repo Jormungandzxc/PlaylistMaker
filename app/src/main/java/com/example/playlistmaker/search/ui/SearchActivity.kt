@@ -16,8 +16,6 @@ import com.google.android.material.appbar.MaterialToolbar
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.os.Message
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
@@ -29,8 +27,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.Track
-import com.example.playlistmaker.search.domain.SearchHistoryInteractor
-import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.google.android.material.button.MaterialButton
 
