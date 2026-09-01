@@ -7,7 +7,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/main">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/left_guideline"
@@ -25,7 +26,7 @@
 
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/searchToolbar"
+            android:id="@+id/playerToolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +43,7 @@
             tools:src="@drawable/placeholder"
             app:layout_constraintEnd_toStartOf="@+id/right_guideline"
             app:layout_constraintStart_toStartOf="@+id/left_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/searchToolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/playerToolbar" />
 
         <TextView
             android:id="@+id/playerTrackName"
