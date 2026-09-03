@@ -28,8 +28,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val factory = SettingsViewModelFactory(
-            Creator.provideSharingInteractor(this),
-            Creator.provideSettingsInteractor(this),
+            Creator.provideSharingInteractor(),
+            Creator.provideSettingsInteractor(),
             applicationContext as App
         )
         viewModel = ViewModelProvider(this, factory)[SettingsViewModel::class.java]

@@ -27,6 +27,13 @@ import com.example.playlistmaker.sharing.domain.SharingInteractor
 import com.example.playlistmaker.sharing.domain.SharingInteractorImpl
 
 object Creator {
+
+    private lateinit var applicationContext: Context
+
+    fun init(context: Context) {
+        applicationContext = context.applicationContext
+    }
+
     private fun getTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient())
     }
@@ -35,24 +42,14 @@ object Creator {
         return TracksInteractorImpl(getTracksRepository())
     }
 
-    private fun getSearchHistoryRepository(context: Context): SearchHistoryRepository {
-        val sharedPrefs = context.getSharedPreferences("playlist_maker_prefs", Context.MODE_PRIVATE)
+    private fun getSearchHistoryRepository(): SearchHistoryRepository {
+        val sharedPrefs =
+            applicationContext.getSharedPreferences("playlist_maker_prefs", Context.MODE_PRIVATE)
         return SearchHistoryRepositoryImpl(sharedPrefs)
     }
 
-    fun provideSearchHistoryInteractor(context: Context): SearchHistoryInteractor {
-        return SearchHistoryInteractorImpl(getSearchHistoryRepository(context))
-    }
-
-    //Настройки темы
-    private fun getThemeRepository(context: Context): ThemeRepository {
-        val sharedPrefs =
-            context.getSharedPreferences(App.PLAYLIST_MAKER_PREFS, Context.MODE_PRIVATE)
-        return ThemeRepositoryImpl(sharedPrefs)
-    }
-
-    fun provideThemeInteractor(context: Context): ThemeInteractor {
-        return ThemeInteractorImpl(getThemeRepository(context))
+    fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
+        return SearchHistoryInteractorImpl(getSearchHistoryRepository())
     }
 
     //Плеер
@@ -61,24 +58,24 @@ object Creator {
     }
 
     //Settings
-    private fun getSettingsRepository(context: Context): SettingsRepository {
+    private fun getSettingsRepository(): SettingsRepository {
         val sharedPreferences =
-            context.getSharedPreferences("playlist_maker_prefs", Context.MODE_PRIVATE)
+            applicationContext.getSharedPreferences("playlist_maker_prefs", Context.MODE_PRIVATE)
         return SettingsRepositoryImpl(sharedPreferences)
     }
 
-    fun provideSettingsInteractor(context: Context): SettingsInteractor {
-        return SettingsInteractorImpl(getSettingsRepository(context))
+    fun provideSettingsInteractor(): SettingsInteractor {
+        return SettingsInteractorImpl(getSettingsRepository())
     }
 
     //Sharing
-    private fun getExternalNavigator(context: Context): ExternalNavigator {
-        return ExternalNavigatorImpl(context)
+    private fun getExternalNavigator(): ExternalNavigator {
+        return ExternalNavigatorImpl(applicationContext)
     }
 
-    fun provideSharingInteractor(context: Context): SharingInteractor {
+    fun provideSharingInteractor(): SharingInteractor {
         return SharingInteractorImpl(
-            externalNavigator = getExternalNavigator(context)
+            externalNavigator = getExternalNavigator()
         )
     }
 }

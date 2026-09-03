@@ -74,7 +74,7 @@ class SearchActivity : AppCompatActivity() {
         //ViewModel
         val factory = SearchViewModelFactory(
             Creator.provideTracksInteractor(),
-            Creator.provideSearchHistoryInteractor(this)
+            Creator.provideSearchHistoryInteractor()
         )
         viewModel = ViewModelProvider(this, factory)[SearchViewModel::class.java]
 
