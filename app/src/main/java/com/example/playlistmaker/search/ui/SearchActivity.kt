@@ -2,8 +2,6 @@ package com.example.playlistmaker.search.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -21,6 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -153,28 +152,17 @@ class SearchActivity : AppCompatActivity() {
             inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         }
 
-        val textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //Empty
-            }
+        searchEditText.doOnTextChanged { text, _, _, _ ->
+            val query = text.toString()
+            searchText = query
+            clearButton.visibility = if (query.isEmpty()) View.GONE else View.VISIBLE
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchText = s.toString()
-                clearButton.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
-
-                if (searchEditText.hasFocus() && s.isNullOrEmpty()) {
-                    viewModel.showHistory()
-                } else {
-                    viewModel.searchDebounce(s.toString())
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                //Empty
+            if (searchEditText.hasFocus() && query.isEmpty()) {
+                viewModel.showHistory()
+            } else {
+                viewModel.searchDebounce(query)
             }
         }
-
-        searchEditText.addTextChangedListener(textWatcher)
 
         searchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && searchEditText.text.isEmpty()) {
