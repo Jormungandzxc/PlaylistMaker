@@ -64,23 +64,8 @@ class PlayerActivity:AppCompatActivity() {
 
         //Подписка на LiveData состояние плеера
         viewModel.playerStateLiveData.observe(this){state ->
-            when(state){
-                1, 3 -> {
-                    playButton.isEnabled = true
-                    playButton.setImageResource(R.drawable.ic_play_btn)
-                }
-                2 -> {
-                    playButton.isEnabled = true
-                    playButton.setImageResource(R.drawable.ic_pause_btn)
-                }
-            }
+            render(state)
         }
-
-        //Подписка на LiveData времени трека
-        viewModel.timerLiveData.observe(this){time ->
-            timerTextView.text = time
-        }
-
 
         track?.let {
             trackName.text = it.trackName
@@ -125,6 +110,29 @@ class PlayerActivity:AppCompatActivity() {
         //бегущая строка альбома
         albumValue.isSelected = true
 
+    }
+
+    private fun render(state: PlayerState){
+        when(state){
+            is PlayerState.Default -> {
+                playButton.isEnabled = false
+                playButton.setImageResource(R.drawable.ic_play_btn)
+                timerTextView.text = state.progress
+            }
+            is PlayerState.Prepared -> {
+                playButton.isEnabled = true
+                playButton.setImageResource(R.drawable.ic_play_btn)
+                timerTextView.text = "00:00"
+            }
+            is PlayerState.Playing -> {
+                playButton.setImageResource(R.drawable.ic_pause_btn)
+                timerTextView.text = state.progress
+            }
+            is PlayerState.Paused -> {
+                playButton.setImageResource(R.drawable.ic_play_btn)
+                timerTextView.text = state.progress
+            }
+        }
     }
 
     override fun onPause() {
