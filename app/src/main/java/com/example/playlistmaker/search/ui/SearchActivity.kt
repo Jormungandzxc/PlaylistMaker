@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -155,7 +156,7 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.doOnTextChanged { text, _, _, _ ->
             val query = text.toString()
             searchText = query
-            clearButton.visibility = if (query.isEmpty()) View.GONE else View.VISIBLE
+            clearButton.isVisible = query.isNotEmpty()
 
             if (searchEditText.hasFocus() && query.isEmpty()) {
                 viewModel.showHistory()
@@ -202,17 +203,17 @@ class SearchActivity : AppCompatActivity() {
 
     //Состояния
     private fun showLoading() {
-        progressBar.visibility = View.VISIBLE
-        trackRecyclerView.visibility = View.GONE
-        historyLayout.visibility = View.GONE
-        placeholderMessage.visibility = View.GONE
+        progressBar.isVisible = true
+        trackRecyclerView.isVisible = false
+        historyLayout.isVisible = false
+        placeholderMessage.isVisible = false
     }
 
     private fun showContent(newTracks: List<Track>) {
-        progressBar.visibility = View.GONE
-        placeholderMessage.visibility = View.GONE
-        historyLayout.visibility = View.GONE
-        trackRecyclerView.visibility = View.VISIBLE
+        progressBar.isVisible = false
+        placeholderMessage.isVisible = false
+        historyLayout.isVisible = false
+        trackRecyclerView.isVisible = true
 
         tracks.clear()
         tracks.addAll(newTracks)
@@ -220,35 +221,35 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showEmpty(message: String) {
-        progressBar.visibility = View.GONE
-        trackRecyclerView.visibility = View.GONE
-        historyLayout.visibility = View.GONE
-        placeholderMessage.visibility = View.VISIBLE
+        progressBar.isVisible = false
+        trackRecyclerView.isVisible = false
+        historyLayout.isVisible = false
+        placeholderMessage.isVisible = true
         placeholderImage.setImageResource(R.drawable.ic_not_found)
         placeholderText.text = message
-        refreshButton.visibility = View.GONE
+        refreshButton.isVisible = false
     }
 
     private fun showError(message: String) {
-        progressBar.visibility = View.GONE
-        trackRecyclerView.visibility = View.GONE
-        historyLayout.visibility = View.GONE
-        placeholderMessage.visibility = View.VISIBLE
+        progressBar.isVisible = false
+        trackRecyclerView.isVisible = false
+        historyLayout.isVisible = false
+        placeholderMessage.isVisible = true
         placeholderImage.setImageResource(R.drawable.ic_error_connection)
         placeholderText.text = message
-        refreshButton.visibility = View.VISIBLE
+        refreshButton.isVisible = true
     }
 
     private fun showHistory(historyTracks: List<Track>) {
-        progressBar.visibility = View.GONE
-        trackRecyclerView.visibility = View.GONE
-        placeholderMessage.visibility = View.GONE
+        progressBar.isVisible = false
+        trackRecyclerView.isVisible = false
+        placeholderMessage.isVisible = false
 
         if (historyTracks.isNotEmpty()) {
-            historyLayout.visibility = View.VISIBLE
+            historyLayout.isVisible = true
             historyAdapter.updateTracks(historyTracks)
         } else {
-            historyLayout.visibility = View.GONE
+            historyLayout.isVisible = false
         }
     }
 
