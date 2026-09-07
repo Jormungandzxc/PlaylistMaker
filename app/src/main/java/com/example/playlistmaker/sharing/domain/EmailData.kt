@@ -1,7 +1,9 @@
 package com.example.playlistmaker.sharing.domain
 
+import androidx.annotation.StringRes
+
 data class EmailData (
-    val email: String,
-    val subject: String,
-    val text: String
+    @StringRes val email: Int,
+    @StringRes val subject: Int,
+    @StringRes val text: Int
 )

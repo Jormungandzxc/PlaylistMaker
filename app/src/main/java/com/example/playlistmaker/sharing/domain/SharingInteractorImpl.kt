@@ -1,5 +1,8 @@
 package com.example.playlistmaker.sharing.domain
 
+import androidx.annotation.StringRes
+import com.example.playlistmaker.R
+
 class SharingInteractorImpl(
     private val externalNavigator: ExternalNavigator,
 ) : SharingInteractor {
@@ -16,19 +19,17 @@ class SharingInteractorImpl(
         externalNavigator.openEmail(getSupportEmailData())
     }
 
-    private fun getShareAppLink(): String {
-        return "https://practicum.yandex.com/profile/android-developer-plus/"
-    }
+    @StringRes
+    private fun getShareAppLink(): Int = R.string.share_app_text
 
     private fun getSupportEmailData(): EmailData {
         return EmailData(
-            email = "diborempty@gmail.com",
-            subject = "Сообщение разработчикам приложения Playlist Maker",
-            text = "Спасибо разработчикам за замечательное приложение!"
+            email = R.string.support_email_address,
+            subject = R.string.support_subject,
+            text = R.string.support_message
         )
     }
 
-    private fun getTermsLink(): String {
-        return "https://yandex.ru/legal/practicum_offer/ru/"
-    }
+    @StringRes
+    private fun getTermsLink(): Int = R.string.agreement_link
 }
