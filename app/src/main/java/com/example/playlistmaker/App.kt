@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.creator.Creator
 
 class App : Application() {
 
@@ -12,6 +13,8 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Creator.init(this)
 
         sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFS, MODE_PRIVATE)
 
