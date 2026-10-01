@@ -34,6 +34,7 @@ class PlayerInteractorImpl : PlayerInteractor {
 
     override fun releasePlayer() {
         mediaPlayer.release()
+        isPlayerPrepared = false
     }
 
     override fun getCurrentPosition(): Int {

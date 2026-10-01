@@ -4,17 +4,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.App
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by viewModel()
     private lateinit var themeSwitcher: SwitchMaterial
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,18 +25,15 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        val factory = SettingsViewModelFactory(
-            Creator.provideSharingInteractor(),
-            Creator.provideSettingsInteractor(),
-            applicationContext as App
-        )
-        viewModel = ViewModelProvider(this, factory)[SettingsViewModel::class.java]
-
         initViews()
         setupListeners()
 
         viewModel.themeSettingsLiveData.observe(this){ settings ->
+            themeSwitcher.setOnCheckedChangeListener(null)
             themeSwitcher.isChecked = settings.isDarkThemeEnabled
+            themeSwitcher.setOnCheckedChangeListener { _, checked ->
+                viewModel.switchTheme(checked)
+            }
         }
 
     }
@@ -54,10 +49,6 @@ class SettingsActivity : AppCompatActivity() {
         val userAgreementButton = findViewById<MaterialTextView>(R.id.btn_user_agreement)
 
         toolbar.setNavigationOnClickListener { finish() }
-
-        themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            viewModel.switchTheme(checked)
-        }
 
         shareButton.setOnClickListener { viewModel.shareApp() }
         supportButton.setOnClickListener { viewModel.openSupport() }

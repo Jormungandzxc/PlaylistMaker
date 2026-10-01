@@ -9,10 +9,10 @@ import com.google.gson.reflect.TypeToken
 
 const val SEARCH_HISTORY_KEY = "key_for_search_history"
 
-class SearchHistoryRepositoryImpl (private val sharedPreferences: SharedPreferences) :
-    SearchHistoryRepository {
-
-    private val gson = Gson()
+class SearchHistoryRepositoryImpl (
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
+) : SearchHistoryRepository {
 
     override fun saveTrack(track: Track) {
         val history = getHistory().toMutableList()

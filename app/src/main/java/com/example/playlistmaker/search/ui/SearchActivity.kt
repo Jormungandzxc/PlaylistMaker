@@ -2,7 +2,6 @@ package com.example.playlistmaker.search.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -21,25 +20,24 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.google.android.material.button.MaterialButton
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {
+
+    private val viewModel: SearchViewModel by viewModel()
     //Переменная для хранения текста
     private var searchText: String = ""
 
     private val tracks = ArrayList<Track>()
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
-
-    private lateinit var viewModel: SearchViewModel
 
     private lateinit var adapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
@@ -70,13 +68,6 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        //ViewModel
-        val factory = SearchViewModelFactory(
-            Creator.provideTracksInteractor(),
-            Creator.provideSearchHistoryInteractor()
-        )
-        viewModel = ViewModelProvider(this, factory)[SearchViewModel::class.java]
 
         initViews()
 
