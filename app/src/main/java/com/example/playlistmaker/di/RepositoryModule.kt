@@ -12,22 +12,22 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    single <SearchHistoryRepository> {
+    factory <SearchHistoryRepository> {
         SearchHistoryRepositoryImpl(
             sharedPreferences = get(),
             gson = get()
         )
     }
 
-    single <TracksRepository>{
+    factory <TracksRepository>{
         TracksRepositoryImpl(get())
     }
 
-    single<SettingsRepository>{
+    factory<SettingsRepository>{
         SettingsRepositoryImpl(get())
     }
 
-    single<ThemeRepository>{
+    factory<ThemeRepository>{
         ThemeRepositoryImpl(get())
     }
 }
