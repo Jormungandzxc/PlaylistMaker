@@ -2,8 +2,7 @@ package com.example.playlistmaker.player.domain
 
 import android.media.MediaPlayer
 
-class PlayerInteractorImpl : PlayerInteractor {
-    private val mediaPlayer = MediaPlayer()
+class PlayerInteractorImpl(private val mediaPlayer: MediaPlayer) : PlayerInteractor {
     private var isPlayerPrepared = false
 
     override fun preparePlayer(
@@ -12,7 +11,7 @@ class PlayerInteractorImpl : PlayerInteractor {
         onCompletion: () -> Unit
     ) {
         mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.prepareAsync()
+
         mediaPlayer.setOnPreparedListener{
             isPlayerPrepared = true
             onPrepared()
@@ -20,6 +19,8 @@ class PlayerInteractorImpl : PlayerInteractor {
         mediaPlayer.setOnCompletionListener {
             onCompletion()
         }
+
+        mediaPlayer.prepareAsync()
     }
 
     override fun startPlayer() {

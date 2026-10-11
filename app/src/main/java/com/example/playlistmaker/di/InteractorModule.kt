@@ -13,11 +13,20 @@ import com.example.playlistmaker.settings.domain.ThemeInteractorImpl
 import com.example.playlistmaker.sharing.domain.SharingInteractor
 import com.example.playlistmaker.sharing.domain.SharingInteractorImpl
 import org.koin.dsl.module
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 val interactorModule = module {
 
+    single<ExecutorService>{
+        Executors.newCachedThreadPool()
+    }
+
     factory <TracksInteractor>{
-        TracksInteractorImpl(get())
+        TracksInteractorImpl(
+            repository = get(),
+            executor = get()
+        )
     }
 
     factory <SearchHistoryInteractor>{
@@ -25,7 +34,7 @@ val interactorModule = module {
     }
 
     factory <PlayerInteractor> {
-        PlayerInteractorImpl()
+        PlayerInteractorImpl(mediaPlayer = get())
     }
 
     factory <SettingsInteractor>{

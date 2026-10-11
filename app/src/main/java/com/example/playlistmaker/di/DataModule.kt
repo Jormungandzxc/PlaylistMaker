@@ -1,6 +1,7 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
+import android.media.MediaPlayer
 import com.example.playlistmaker.search.data.network.ITunesApi
 import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -17,12 +18,12 @@ private const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
 val dataModule = module {
 
     //Создание ITunes Api через  Retrofit
-    single <ITunesApi> {
+    single<ITunesApi> {
         Retrofit.Builder()
             .baseUrl("https://itunes.apple.com")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ITunesApi:: class.java)
+            .create(ITunesApi::class.java)
     }
 
     single<NetworkClient> {
@@ -39,8 +40,10 @@ val dataModule = module {
 
     factory { Gson() }
 
-    factory<ExternalNavigator>{
+    factory<ExternalNavigator> {
         ExternalNavigatorImpl(context = androidContext())
     }
+
+    factory { MediaPlayer() }
 
 }

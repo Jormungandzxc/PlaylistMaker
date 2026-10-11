@@ -1,5 +1,7 @@
 package com.example.playlistmaker.di
 
+import android.os.Handler
+import android.os.Looper
 import com.example.playlistmaker.App
 import com.example.playlistmaker.player.ui.PlayerViewModel
 import com.example.playlistmaker.search.ui.SearchViewModel
@@ -14,10 +16,15 @@ val viewModelModule = module {
         SearchViewModel(get(), get())
     }
 
+    factory {
+        Handler(Looper.getMainLooper())
+    }
+
     viewModel{ (previewUrl: String) ->
         PlayerViewModel(
             previewUrl = previewUrl,
-            get()
+            playerInteractor = get(),
+            handler = get()
         )
     }
 
