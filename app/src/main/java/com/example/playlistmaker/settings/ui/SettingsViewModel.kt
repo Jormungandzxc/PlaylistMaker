@@ -22,6 +22,7 @@ class SettingsViewModel (
 
     fun switchTheme(isDark: Boolean){
         val newSettings = ThemeSettings(isDarkThemeEnabled = isDark)
+        settingsInteractor.updateThemeSetting(newSettings)
         application.switchTheme(isDark)
         _themeSettingsLiveData.value = newSettings
     }

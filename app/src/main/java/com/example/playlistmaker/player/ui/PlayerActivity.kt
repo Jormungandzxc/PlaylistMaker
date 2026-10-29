@@ -8,21 +8,26 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.Track
 import com.google.android.material.appbar.MaterialToolbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity:AppCompatActivity() {
 
+    private val viewModel: PlayerViewModel by viewModel{
+        val track = intent.getSerializableExtra("selected_track") as? Track
+        parametersOf(track?.previewUrl.orEmpty())
+    }
+
     private lateinit var playButton: ImageButton
     private lateinit var timerTextView: TextView
-    private lateinit var viewModel: PlayerViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,20 +52,14 @@ class PlayerActivity:AppCompatActivity() {
         val genreValue = findViewById<TextView>(R.id.trackGenreValue)
         val countryValue =  findViewById<TextView>(R.id.countryValue)
 
+        val track = intent.getSerializableExtra("selected_track") as? Track
+
         playButton = findViewById(R.id.playButton)
         timerTextView = findViewById(R.id.track_timer)
 
         //ToolBar
         toolbar.setNavigationOnClickListener { finish() }
 
-
-        //Получение объекта трека
-        val track = intent.getSerializableExtra("selected_track") as? Track
-
-        //Иницилизация ViewModel через Factory
-        val previewUrl = track?.previewUrl.orEmpty()
-        val factory = PlayerViewModelFactory(previewUrl, Creator.providePlayerInteractor())
-        viewModel = ViewModelProvider(this, factory)[PlayerViewModel::class.java]
 
         //Подписка на LiveData состояние плеера
         viewModel.playerStateLiveData.observe(this){state ->

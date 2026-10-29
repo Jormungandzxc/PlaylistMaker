@@ -1,7 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +10,8 @@ import java.util.Locale
 
 class PlayerViewModel(
     private val previewUrl: String,
-    private val playerInteractor: PlayerInteractor
+    private val playerInteractor: PlayerInteractor,
+    private val handler: Handler
 ) : ViewModel() {
 
     companion object {
@@ -23,8 +23,6 @@ class PlayerViewModel(
     private val _playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     val playerStateLiveData: LiveData<PlayerState> = _playerStateLiveData
 
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
