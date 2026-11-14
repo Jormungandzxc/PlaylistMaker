@@ -40,7 +40,7 @@
         style="@style/MainButtonWithIconStyle"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="16dp"
-        android:text="@string/btn_library"
+        android:text="@string/library"
         app:icon="@drawable/ic_library_24"
         app:layout_constraintBottom_toTopOf="@id/btn_settings"
         app:layout_constraintEnd_toEndOf="parent"
