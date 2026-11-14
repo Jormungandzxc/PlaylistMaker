@@ -3,6 +3,9 @@ package com.example.playlistmaker.di
 import android.os.Handler
 import android.os.Looper
 import com.example.playlistmaker.App
+import com.example.playlistmaker.medialibrary.ui.LibraryViewModel
+import com.example.playlistmaker.medialibrary.ui.favorites.FavoriteTracksViewModel
+import com.example.playlistmaker.medialibrary.ui.playlists.PlaylistsViewModel
 import com.example.playlistmaker.player.ui.PlayerViewModel
 import com.example.playlistmaker.search.ui.SearchViewModel
 import com.example.playlistmaker.settings.ui.SettingsViewModel
@@ -35,4 +38,18 @@ val viewModelModule = module {
             androidApplication() as App
         )
     }
+
+    viewModel {
+        LibraryViewModel()
+    }
+
+    viewModel {
+        PlaylistsViewModel()
+    }
+
+    viewModel {
+        FavoriteTracksViewModel()
+    }
+
+
 }
