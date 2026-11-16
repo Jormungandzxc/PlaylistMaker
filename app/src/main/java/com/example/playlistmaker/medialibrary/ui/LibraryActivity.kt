@@ -1,6 +1,5 @@
 package com.example.playlistmaker.medialibrary.ui
 
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -41,8 +40,8 @@ class LibraryActivity : AppCompatActivity() {
 
         tabMediator = TabLayoutMediator(tabLayout, viewPager){tab, position ->
             when(position){
-                0 -> tab.text = "Избранные треки"
-                1 -> tab.text = "Плейлисты"
+                0 -> tab.text = getString(R.string.favorite_tracks)
+                1 -> tab.text = getString(R.string.playlists)
             }
         }
         tabMediator.attach()
