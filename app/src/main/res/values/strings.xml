@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Playlist Maker</string>
     <string name="app_title">Playlist maker</string>
-    <string name="btn_library">Медиатека</string>
+    <string name="library">Медиатека</string>
     <string name="btn_settings">Настройки</string>
     <string name="btn_search">Поиск</string>
     <string name="btn_dark_theme">Темная тема</string>
@@ -21,4 +21,9 @@
     <string name="something_went_wrong_additional_message">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="btn_refresh">Обновить</string>
     <string name="timerTVText">00:00</string>
+    <string name="favorite_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="you_have_not_created_any_playlists">Вы не создали\nни одного плейлиста</string>
+    <string name="your_library_is_empty">Ваша медиатека пуста</string>
 </resources>
